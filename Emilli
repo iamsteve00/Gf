@@ -54,28 +54,20 @@ RestoreButton.MouseButton1Click:Connect(function()
     MiniFrame.Visible = false
 end)
 
--- Creating tabs
-local TrollTab = Instance.new("TextButton")
-local PlayerTab = Instance.new("TextButton")
-local OthersTab = Instance.new("TextButton")
+-- Creating Tabs
+local function createTabButton(name, text, position)
+    local tabButton = Instance.new("TextButton")
+    tabButton.Name = name
+    tabButton.Parent = Frame
+    tabButton.Text = text
+    tabButton.Size = UDim2.new(0, 80, 0, 30)
+    tabButton.Position = position
+    return tabButton
+end
 
-TrollTab.Name = "TrollTab"
-TrollTab.Parent = Frame
-TrollTab.Text = "Troll"
-TrollTab.Size = UDim2.new(0, 80, 0, 30)
-TrollTab.Position = UDim2.new(0, 10, 0, 10)
-
-PlayerTab.Name = "PlayerTab"
-PlayerTab.Parent = Frame
-PlayerTab.Text = "Player"
-PlayerTab.Size = UDim2.new(0, 80, 0, 30)
-PlayerTab.Position = UDim2.new(0, 100, 0, 10)
-
-OthersTab.Name = "OthersTab"
-OthersTab.Parent = Frame
-OthersTab.Text = "Others"
-OthersTab.Size = UDim2.new(0, 80, 0, 30)
-OthersTab.Position = UDim2.new(0, 190, 0, 10)
+local TrollTab = createTabButton("TrollTab", "Troll", UDim2.new(0, 10, 0, 10))
+local PlayerTab = createTabButton("PlayerTab", "Player", UDim2.new(0, 100, 0, 10))
+local OthersTab = createTabButton("OthersTab", "Others", UDim2.new(0, 190, 0, 10))
 
 -- Function to create "Back" buttons
 local function createBackButton(parent)
@@ -90,48 +82,21 @@ local function createBackButton(parent)
     end)
 end
 
--- Creating Tabs and Features
-local TrollFrame = Instance.new("Frame")
-TrollFrame.Parent = ScreenGui
-TrollFrame.Size = UDim2.new(0, 300, 0, 250)
-TrollFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-TrollFrame.Visible = false
-createBackButton(TrollFrame)
+-- Creating Tabs
+local function createTabFrame()
+    local tabFrame = Instance.new("Frame")
+    tabFrame.Parent = ScreenGui
+    tabFrame.Size = UDim2.new(0, 300, 0, 250)
+    tabFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+    tabFrame.Visible = false
+    createBackButton(tabFrame)
+    return tabFrame
+end
 
-local MapFrame = Instance.new("Frame")
-MapFrame.Parent = ScreenGui
-MapFrame.Size = UDim2.new(0, 300, 0, 250)
-MapFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-MapFrame.Visible = false
-createBackButton(MapFrame)
-
-local MoveObjectButton = Instance.new("TextButton")
-MoveObjectButton.Parent = MapFrame
-MoveObjectButton.Text = "Move Objects"
-MoveObjectButton.Size = UDim2.new(0, 120, 0, 30)
-MoveObjectButton.Position = UDim2.new(0, 140, 0, 50)
-
-MoveObjectButton.MouseButton1Click:Connect(function()
-    for _, obj in ipairs(game.Workspace:GetChildren()) do
-        if obj:IsA("Model") or obj:IsA("Part") then
-            obj:SetPrimaryPartCFrame(obj:GetPrimaryPartCFrame() * CFrame.new(math.random(-20, 20), 0, math.random(-20, 20)))
-        end
-    end
-end)
-
-local OthersFrame = Instance.new("Frame")
-OthersFrame.Parent = ScreenGui
-OthersFrame.Size = UDim2.new(0, 300, 0, 250)
-OthersFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-OthersFrame.Visible = false
-createBackButton(OthersFrame)
-
-local PlayerFrame = Instance.new("Frame")
-PlayerFrame.Parent = ScreenGui
-PlayerFrame.Size = UDim2.new(0, 300, 0, 250)
-PlayerFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-PlayerFrame.Visible = false
-createBackButton(PlayerFrame)
+local TrollFrame = createTabFrame()
+local MapFrame = createTabFrame()
+local OthersFrame = createTabFrame()
+local PlayerFrame = createTabFrame()
 
 -- Showing Tabs when clicking
 TrollTab.MouseButton1Click:Connect(function()
@@ -149,6 +114,21 @@ OthersTab.MouseButton1Click:Connect(function()
     OthersFrame.Visible = true
 end)
 
+-- Move Objects Feature
+local MoveObjectButton = Instance.new("TextButton")
+MoveObjectButton.Parent = MapFrame
+MoveObjectButton.Text = "Move Objects"
+MoveObjectButton.Size = UDim2.new(0, 120, 0, 30)
+MoveObjectButton.Position = UDim2.new(0, 140, 0, 50)
+
+MoveObjectButton.MouseButton1Click:Connect(function()
+    for _, obj in ipairs(game.Workspace:GetChildren()) do
+        if obj:IsA("Model") and obj.PrimaryPart then
+            obj:SetPrimaryPartCFrame(obj:GetPrimaryPartCFrame() * CFrame.new(math.random(-20, 20), 0, math.random(-20, 20)))
+        end
+    end
+end)
+
 -- Temporary Message when Executing the Script
 local function showTemporaryMessage(messageText, duration)
     for _, player in ipairs(game.Players:GetPlayers()) do
@@ -158,17 +138,4 @@ local function showTemporaryMessage(messageText, duration)
             messageLabel.Parent = playerGui
             messageLabel.Text = messageText
             messageLabel.Size = UDim2.new(0, 400, 0, 50)
-            messageLabel.Position = UDim2.new(0.5, -200, 0.1, 0)
-            messageLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            messageLabel.TextScaled = true
-            messageLabel.Visible = true
-            
-            task.delay(duration, function()
-                messageLabel:Destroy()
-            end)
-        end
-    end
-end
-
-showTemporaryMessage("emilli the Best return", 5)# Gf
+            messageLabel.Position
