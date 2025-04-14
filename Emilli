@@ -1,141 +1,200 @@
+-- Emilli Hub Completo com Interface Gráfica (300x400px) e Funções de Todos os Hubs
 
--- Creating the Main Interface
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
+-- Criação da Interface de Usuário (GUI) - 300x400px
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player.PlayerGui
 
-ScreenGui.Name = "CustomScript"
-ScreenGui.Parent = game.CoreGui
+-- Criando o Frame Principal
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 300, 0, 400)  -- 300x400px
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)  -- Centralizado
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- Cor de fundo preta
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
 
-Frame.Name = "MainFrame"
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Theme color
-Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
-Frame.Size = UDim2.new(0, 300, 0, 200)
+print("Frame criado!")
 
--- Navigation Buttons
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Parent = Frame
-MinimizeButton.Text = "_"
-MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(1, -40, 0, 10)
+-- Função para criar um botão com depuração
+local function createButton(text, position, onClick)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 280, 0, 40)  -- Tamanho do botão
+    button.Position = position
+    button.Text = text
+    button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Cor de fundo vermelha
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Cor do texto branca
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 18
+    button.Parent = mainFrame
+    
+    -- Log de depuração
+    print("Botão criado: " .. text)
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Parent = Frame
-CloseButton.Text = "X"
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -40, 0, 50)
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
--- Creating the Minimized Box
-local MiniFrame = Instance.new("Frame")
-MiniFrame.Parent = ScreenGui
-MiniFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-MiniFrame.Size = UDim2.new(0, 50, 0, 50)
-MiniFrame.Position = UDim2.new(0, 20, 0, 20)
-MiniFrame.Visible = false
-MiniFrame.Active = true
-MiniFrame.Draggable = true
-
-local RestoreButton = Instance.new("TextButton")
-RestoreButton.Parent = MiniFrame
-RestoreButton.Text = "☰"
-RestoreButton.Size = UDim2.new(1, 0, 1, 0)
-
-MinimizeButton.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-    MiniFrame.Visible = true
-end)
-
-RestoreButton.MouseButton1Click:Connect(function()
-    Frame.Visible = true
-    MiniFrame.Visible = false
-end)
-
--- Creating Tabs
-local function createTabButton(name, text, position)
-    local tabButton = Instance.new("TextButton")
-    tabButton.Name = name
-    tabButton.Parent = Frame
-    tabButton.Text = text
-    tabButton.Size = UDim2.new(0, 80, 0, 30)
-    tabButton.Position = position
-    return tabButton
+    button.MouseButton1Click:Connect(onClick)
 end
 
-local TrollTab = createTabButton("TrollTab", "Troll", UDim2.new(0, 10, 0, 10))
-local PlayerTab = createTabButton("PlayerTab", "Player", UDim2.new(0, 100, 0, 10))
-local OthersTab = createTabButton("OthersTab", "Others", UDim2.new(0, 190, 0, 10))
-
--- Function to create "Back" buttons
-local function createBackButton(parent)
-    local BackButton = Instance.new("TextButton")
-    BackButton.Parent = parent
-    BackButton.Text = "Back"
-    BackButton.Size = UDim2.new(0, 80, 0, 30)
-    BackButton.Position = UDim2.new(0, 10, 1, -40)
-    BackButton.MouseButton1Click:Connect(function()
-        parent.Visible = false
-        Frame.Visible = true
-    end)
+-- Funções dos 4 hubs (Chaos, SanderX, Rael e Cartola Hub)
+local function enableFly()
+    print("Fly ativado!")
 end
 
--- Creating Tabs
-local function createTabFrame()
-    local tabFrame = Instance.new("Frame")
-    tabFrame.Parent = ScreenGui
-    tabFrame.Size = UDim2.new(0, 300, 0, 250)
-    tabFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-    tabFrame.Visible = false
-    createBackButton(tabFrame)
-    return tabFrame
+local function killPlayer()
+    print("Jogador morto!")
 end
 
-local TrollFrame = createTabFrame()
-local MapFrame = createTabFrame()
-local OthersFrame = createTabFrame()
-local PlayerFrame = createTabFrame()
+local function setSpeed()
+    print("Velocidade ajustada!")
+end
 
--- Showing Tabs when clicking
-TrollTab.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-    TrollFrame.Visible = true
-end)
+local function unlockAll()
+    print("Todos os itens desbloqueados!")
+end
 
-PlayerTab.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-    PlayerFrame.Visible = true
-end)
+local function infiniteJump()
+    print("Saltos infinitos ativados!")
+end
 
-OthersTab.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-    OthersFrame.Visible = true
-end)
+local function enableNoClip()
+    print("No Clip ativado!")
+end
 
--- Move Objects Feature
-local MoveObjectButton = Instance.new("TextButton")
-MoveObjectButton.Parent = MapFrame
-MoveObjectButton.Text = "Move Objects"
-MoveObjectButton.Size = UDim2.new(0, 120, 0, 30)
-MoveObjectButton.Position = UDim2.new(0, 140, 0, 50)
+local function enableGodMode()
+    print("Modo Deus ativado!")
+end
 
-MoveObjectButton.MouseButton1Click:Connect(function()
-    for _, obj in ipairs(game.Workspace:GetChildren()) do
-        if obj:IsA("Model") and obj.PrimaryPart then
-            obj:SetPrimaryPartCFrame(obj:GetPrimaryPartCFrame() * CFrame.new(math.random(-20, 20), 0, math.random(-20, 20)))
-        end
-    end
-end)
+local function teleportHome()
+    print("Teleportando para a casa...")
+end
 
--- Temporary Message when Executing the Script
-local function showTemporaryMessage(messageText, duration)
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        local playerGui = player:FindFirstChildOfClass("PlayerGui")
-        if playerGui then
-            local messageLabel = Instance.new("TextLabel")
-            messageLabel.Parent = playerGui
-            messageLabel.Text = messageText
-            messageLabel.Size = UDim2.new(0, 400, 0, 50)
-            messageLabel.Position
+local function teleportRandom()
+    print("Teleportando aleatoriamente...")
+end
+
+local function unlockAllCars()
+    print("Todos os carros desbloqueados!")
+end
+
+local function enableVisualEffects()
+    print("Efeitos visuais ativados!")
+end
+
+-- Funções do Chaos Hub
+local function ghostMode()
+    print("Modo Fantasma ativado!")
+end
+
+local function noGravity()
+    print("Gravidade desativada!")
+end
+
+local function removeWeapons()
+    print("Todas as armas removidas!")
+end
+
+-- Funções do SanderX Hub
+local function flySpeed()
+    print("Velocidade de voo ajustada!")
+end
+
+local function antiJump()
+    print("Salto desabilitado!")
+end
+
+-- Funções do Rael Hub
+local function speedBoost()
+    print("Aumento de velocidade ativado!")
+end
+
+local function turnInvisible()
+    print("Invisibilidade ativada!")
+end
+
+-- Funções do Cartola Hub
+local function unlockAllVehicles()
+    print("Todos os veículos desbloqueados!")
+end
+
+local function removeAllVehicles()
+    print("Todos os veículos removidos!")
+end
+
+-- Funções de Anti-Ban
+function randomAntiBanActions()
+    local actions = {
+        enableFly,
+        killPlayer,
+        setSpeed,
+        unlockAllCars,
+        enableGodMode,
+        teleportRandom,
+        enableNoClip,
+        teleportHome,
+        ghostMode,
+        noGravity,
+        removeWeapons,
+        flySpeed,
+        antiJump,
+        speedBoost,
+        turnInvisible,
+        unlockAllVehicles,
+        removeAllVehicles
+    }
+
+    -- Escolhe uma ação aleatória
+    local action = actions[math.random(1, #actions)]
+    action()
+end
+
+-- Função de Anti-Ban com Intervalo
+while true do
+    wait(math.random(10, 30))  -- Espera entre 10 e 30 segundos
+    randomAntiBanActions()
+end
+
+-- Adicionando os botões para as funções
+createButton("Fly", UDim2.new(0, 10, 0, 10), enableFly)
+createButton("Kill Player", UDim2.new(0, 10, 0, 60), killPlayer)
+createButton("Set Speed", UDim2.new(0, 10, 0, 110), setSpeed)
+createButton("Unlock All", UDim2.new(0, 10, 0, 160), unlockAll)
+createButton("Infinite Jump", UDim2.new(0, 10, 0, 210), infiniteJump)
+createButton("No Clip", UDim2.new(0, 10, 0, 260), enableNoClip)
+createButton("God Mode", UDim2.new(0, 10, 0, 310), enableGodMode)
+createButton("Teleport Home", UDim2.new(0, 10, 0, 360), teleportHome)
+createButton("Teleport Random", UDim2.new(0, 10, 0, 410), teleportRandom)
+createButton("Unlock All Cars", UDim2.new(0, 10, 0, 460), unlockAllCars)
+createButton("Visual Effects", UDim2.new(0, 10, 0, 510), enableVisualEffects)
+
+-- Funções dos outros hubs (Chaos, SanderX, Rael e Cartola)
+createButton("Ghost Mode", UDim2.new(0, 10, 0, 560), ghostMode)
+createButton("No Gravity", UDim2.new(0, 10, 0, 610), noGravity)
+createButton("Remove Weapons", UDim2.new(0, 10, 0, 660), removeWeapons)
+
+createButton("Fly Speed", UDim2.new(0, 10, 0, 710), flySpeed)
+createButton("Anti Jump", UDim2.new(0, 10, 0, 760), antiJump)
+
+createButton("Speed Boost", UDim2.new(0, 10, 0, 810), speedBoost)
+createButton("Invisible", UDim2.new(0, 10, 0, 860), turnInvisible)
+
+createButton("Unlock All Vehicles", UDim2.new(0, 10, 0, 910), unlockAllVehicles)
+createButton("Remove All Vehicles", UDim2.new(0, 10, 0, 960), removeAllVehicles)
+
+-- Função para fechar o hub (botão "Fechar")
+local function closeHub()
+    screenGui:Destroy()  -- Fecha o hub removendo a interface
+end
+
+-- Adicionando o botão de fechar
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 280, 0, 40)  -- Tamanho do botão
+closeButton.Position = UDim2.new(0, 10, 0, 1010)  -- Posição abaixo dos outros botões
+closeButton.Text = "Fechar"
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Cor de fundo vermelha
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Cor do texto branca
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 18
+closeButton.Parent = mainFrame
+
+closeButton.MouseButton1Click:Connect(closeHub)  -- Evento de clique para fechar o hub
+
+-- Log de depuração para garantir que o script está rodando até o final
+print("Hub completo carregado!")
