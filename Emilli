@@ -1,96 +1,89 @@
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local TopBar = Instance.new("Frame")
-local MinimizeButton = Instance.new("TextButton")
-local CloseButton = Instance.new("TextButton")
-local SideBar = Instance.new("Frame")
-local Content = Instance.new("Frame")
-local miniBtn = Instance.new("TextButton")
+-- Emilli Hub com sistema de minimizar + barra de nome para Kill Player
 
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
+local Players = game:GetService("Players") local LocalPlayer = Players.LocalPlayer
 
--- MAIN FRAME
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
-MainFrame.Size = UDim2.new(0, 600, 0, 400)
-MainFrame.Active = true
-MainFrame.Draggable = true
+local EmilliHub = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui")) EmilliHub.Name = "EmilliHub" EmilliHub.ResetOnSpawn = false
 
--- TOP BAR
-TopBar.Name = "TopBar"
-TopBar.Parent = MainFrame
-TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-TopBar.Size = UDim2.new(1, 0, 0, 30)
+-- Main Frame local MainFrame = Instance.new("Frame", EmilliHub) MainFrame.Size = UDim2.new(0, 750, 0, 420) MainFrame.Position = UDim2.new(0.5, -375, 0.5, -210) MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20) MainFrame.BorderSizePixel = 0 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 
--- MINIMIZE BUTTON
-MinimizeButton.Name = "MinimizeButton"
-MinimizeButton.Parent = TopBar
-MinimizeButton.Text = "-"
-MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(1, -60, 0, 0)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.BorderSizePixel = 0
+-- Título local Title = Instance.new("TextLabel", MainFrame) Title.Size = UDim2.new(1, -40, 0, 40) Title.Position = UDim2.new(0, 10, 0, 0) Title.Text = "Brookhaven RP | Português" Title.Font = Enum.Font.GothamBold Title.TextSize = 18 Title.TextColor3 = Color3.fromRGB(255, 255, 255) Title.BackgroundTransparency = 1 Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- CLOSE BUTTON
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = TopBar
-CloseButton.Text = "X"
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -30, 0, 0)
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.BorderSizePixel = 0
+-- Botões de fechar e minimizar local CloseBtn = Instance.new("TextButton", MainFrame) CloseBtn.Size = UDim2.new(0, 30, 0, 30) CloseBtn.Position = UDim2.new(1, -35, 0, 5) CloseBtn.Text = "X" CloseBtn.Font = Enum.Font.GothamBold CloseBtn.TextSize = 14 CloseBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0) CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.MouseButton1Click:Connect(function() EmilliHub:Destroy() end)
 
--- SIDEBAR
-SideBar.Name = "SideBar"
-SideBar.Parent = MainFrame
-SideBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-SideBar.Position = UDim2.new(0, 0, 0, 30)
-SideBar.Size = UDim2.new(0, 150, 1, -30)
+local MinimizeBtn = Instance.new("TextButton", MainFrame) MinimizeBtn.Size = UDim2.new(0, 30, 0, 30) MinimizeBtn.Position = UDim2.new(1, -70, 0, 5) MinimizeBtn.Text = "-" MinimizeBtn.Font = Enum.Font.GothamBold MinimizeBtn.TextSize = 14 MinimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30) MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- CONTENT FRAME
-Content.Name = "Content"
-Content.Parent = MainFrame
-Content.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Content.Position = UDim2.new(0, 150, 0, 30)
-Content.Size = UDim2.new(1, -150, 1, -30)
+local minimized = false local originalSize = MainFrame.Size local originalPosition = MainFrame.Position
 
--- MINI BUTTON
-miniBtn.Name = "MiniBtn"
-miniBtn.Parent = ScreenGui
-miniBtn.Size = UDim2.new(0, 50, 0, 50)
-miniBtn.Position = UDim2.new(0.5, -25, 0.5, -25)
-miniBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-miniBtn.Visible = false
-miniBtn.Text = ""
+local function makeDraggable(gui) local dragging, dragInput, dragStart, startPos
 
--- E IMAGE ICON
-local icon = Instance.new("ImageLabel", miniBtn)
-icon.Size = UDim2.new(1, 0, 1, 0)
-icon.Position = UDim2.new(0, 0, 0, 0)
-icon.BackgroundTransparency = 1
-icon.Image = "rbxassetid://ID_DA_IMAGEM" -- Substitua aqui pelo ID real da imagem "E"
+gui.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = gui.Position
 
--- DRAG MINI BUTTON
-miniBtn.Active = true
-miniBtn.Draggable = true
-
--- FUNCTIONS
-MinimizeButton.MouseButton1Click:Connect(function()
-	MainFrame.Visible = false
-	miniBtn.Visible = true
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
 end)
 
-miniBtn.MouseButton1Click:Connect(function()
-	MainFrame.Visible = true
-	miniBtn.Visible = false
+gui.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
-	ScreenGui:Destroy()
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 end)
+
+end
+
+MinimizeBtn.MouseButton1Click:Connect(function() if not minimized then for _, frame in pairs(MainFrame:GetChildren()) do if frame:IsA("Frame") or frame:IsA("TextLabel") or frame:IsA("ScrollingFrame") then frame.Visible = false end end MainFrame.Size = UDim2.new(0, 60, 0, 60) MainFrame.Position = UDim2.new(0, 20, 0, 100) MinimizeBtn.Visible = false CloseBtn.Visible = false Title.Visible = false minimized = true
+
+local RestoreBtn = Instance.new("TextButton", MainFrame)
+    RestoreBtn.Name = "RestoreBtn"
+    RestoreBtn.Size = UDim2.new(1, 0, 1, 0)
+    RestoreBtn.Position = UDim2.new(0, 0, 0, 0)
+    RestoreBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    RestoreBtn.Text = "Abrir"
+    RestoreBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    RestoreBtn.Font = Enum.Font.GothamBold
+    RestoreBtn.TextSize = 14
+
+    makeDraggable(MainFrame)
+
+    RestoreBtn.MouseButton1Click:Connect(function()
+        RestoreBtn:Destroy()
+        MainFrame.Size = originalSize
+        MainFrame.Position = originalPosition
+        for _, frame in pairs(MainFrame:GetChildren()) do
+            if frame:IsA("Frame") or frame:IsA("TextLabel") or frame:IsA("ScrollingFrame") then
+                frame.Visible = true
+            end
+        end
+        MinimizeBtn.Visible = true
+        CloseBtn.Visible = true
+        Title.Visible = true
+        minimized = false
+    end)
+end
+
+end)
+
+-- Exemplo de aba com Kill Player + barra de input local AbaKillPlayer = Instance.new("Frame", MainFrame) AbaKillPlayer.Size = UDim2.new(0, 250, 0, 150) AbaKillPlayer.Position = UDim2.new(0, 120, 0, 50) AbaKillPlayer.BackgroundColor3 = Color3.fromRGB(25, 25, 25) Instance.new("UICorner", AbaKillPlayer).CornerRadius = UDim.new(0, 6)
+
+local PlayerNameBox = Instance.new("TextBox", AbaKillPlayer) PlayerNameBox.Size = UDim2.new(0, 200, 0, 30) PlayerNameBox.Position = UDim2.new(0, 10, 0, 10) PlayerNameBox.PlaceholderText = "Nome do jogador" PlayerNameBox.Font = Enum.Font.Gotham PlayerNameBox.TextSize = 14 PlayerNameBox.TextColor3 = Color3.fromRGB(255, 255, 255) PlayerNameBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30) PlayerNameBox.ClearTextOnFocus = false
+
+local KillBtn = Instance.new("TextButton", AbaKillPlayer) KillBtn.Size = UDim2.new(0, 200, 0, 30) KillBtn.Position = UDim2.new(0, 10, 0, 50) KillBtn.Text = "Kill Player" KillBtn.Font = Enum.Font.GothamBold KillBtn.TextSize = 14 KillBtn.TextColor3 = Color3.fromRGB(255, 255, 255) KillBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+
+KillBtn.MouseButton1Click:Connect(function() local name = PlayerNameBox.Text local target = game.Players:FindFirstChild(name) if target and target.Character and target.Character:FindFirstChild("Humanoid") then target.Character.Humanoid.Health = 0 end end)
+
+-- Aqui continua a construção das outras abas e funcionalidades...
+
